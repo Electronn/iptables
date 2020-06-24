@@ -1,0 +1,11 @@
+{% for table, chains in iptables["rules"].items() %}
+{% raw %}*{% endraw %}{{ table }}
+{% for chain, rules in chains.items() %}
+:{{ chain|upper }} {{ iptables["policies"][table][chain] }} [0:0]
+{% for rule in rules %}
+-A {{ chain|upper }} {% if rule["proto"] is defined %} -p {{ rule["proto"] }} {% endif %} {% if rule["ports"] is defined %}-m multiport --dports {{ rule["ports"] }}{% endif %}{% if rule["src"] is defined %} -s {{ rule["src"] }}{% endif %}{% if rule["dst"] is defined %} -d {{ rule["dst"] }}{% endif %} -j {{ rule["action"] | default("ACCEPT") }}{% if rule["comment"] is defined %} -m comment --comment "{{ rule["comment"] }}"{% endif %}
+
+{% endfor %}
+{% endfor %}
+COMMIT
+{% endfor %}
