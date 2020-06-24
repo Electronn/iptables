@@ -1,0 +1,5 @@
+galaxy_info:
+ author: Nikolai Vaganov
+ description: simple iptables role for ansible
+ galaxy_tags: []
+dependencies: []
